@@ -6,9 +6,11 @@ export declare const addDescription: typeof AllureReporterExtensions.addDescript
 export declare const addEnvironment: typeof AllureReporterExtensions.addEnvironment;
 export declare const attachScreenshot: typeof AllureReporterExtensions.attachScreenshot;
 export declare const Step: typeof AllureReporterExtensions.Step;
+export declare const DescribedStep: typeof AllureReporterExtensions.DescribedStep;
 export declare const addFeature: typeof AllureReporterExtensions.addFeature;
 export declare const addStory: typeof AllureReporterExtensions.addStory;
 export declare const createAttachment: typeof AllureReporterExtensions.createAttachment;
 export declare const Heading: typeof AllureReporterExtensions.Heading;
 export declare const ScreenedStep: typeof AllureReporterExtensions.ScreenedStep;
+export declare const DescribedScreenedStep: typeof AllureReporterExtensions.DescribedScreenedStep;
 export declare const setScreenshotProvider: typeof AllureReporterExtensions.setScreenshotProvider;
