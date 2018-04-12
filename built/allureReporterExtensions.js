@@ -75,20 +75,30 @@ var AllureReporterExtensions;
         return createStepAnnotation({ screen: false, title: null, heading: true });
     }
     AllureReporterExtensions.Heading = Heading;
+    function DescribedScreenedStep(title = null) {
+        return createStepAnnotation({ screen: true, heading: false, title: title, logClass: true });
+    }
+    AllureReporterExtensions.DescribedScreenedStep = DescribedScreenedStep;
     function ScreenedStep(title = null) {
         return createStepAnnotation({ screen: true, heading: false, title: title });
     }
     AllureReporterExtensions.ScreenedStep = ScreenedStep;
+    function DescribedStep(title = null) {
+        return createStepAnnotation({ screen: false, title: title, heading: false, logClass: true });
+    }
+    AllureReporterExtensions.DescribedStep = DescribedStep;
     function Step(title = null) {
         return createStepAnnotation({ screen: false, title: title, heading: false });
     }
     AllureReporterExtensions.Step = Step;
     function createStepAnnotation(stepInfo) {
         return (target, methodName, descriptor) => {
-            let originalMethod = descriptor.value;
-            let isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
+            const methodClassName = target.constructor.name;
+            const originalMethod = descriptor.value;
+            const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
             let title = stepInfo && stepInfo.title ? stepInfo.title : methodName;
-            let screen = stepInfo && stepInfo.screen;
+            title = stepInfo && stepInfo.logClass ? `${title} (${methodClassName})` : title;
+            const screen = stepInfo && stepInfo.screen;
             let status = TestStatus.PASSED;
             descriptor.value = isOriginalAsync || screen ? async function () {
                 try {
