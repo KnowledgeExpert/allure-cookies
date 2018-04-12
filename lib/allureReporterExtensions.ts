@@ -77,25 +77,17 @@ export namespace AllureReporterExtensions {
         return createStepAnnotation({screen: false, title: null as string, heading: true});
     }
 
-    export function DescribedScreenedStep(title = null as string) {
+    export function ScreenedStep(title = null as string) {
         return createStepAnnotation({screen: true, heading: false, title: title, logClass: true});
     }
 
-    export function ScreenedStep(title = null as string) {
-        return createStepAnnotation({screen: true, heading: false, title: title});
-    }
-
-    export function DescribedStep(title = null as string) {
-        return createStepAnnotation({screen: false, title: title, heading: false, logClass: true});
-    }
-
     export function Step(title = null as string) {
-        return createStepAnnotation({screen: false, title: title, heading: false});
+        return createStepAnnotation({screen: false, title: title, heading: false, logClass: true});
     }
 
     function createStepAnnotation(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, logClass?: boolean }) {
         return (target, methodName, descriptor: PropertyDescriptor) => {
-            const methodClassName = target.constructor.name;
+            const methodClassName = target.constructor.name.trim();
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
 

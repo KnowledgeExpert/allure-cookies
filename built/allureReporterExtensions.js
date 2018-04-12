@@ -75,25 +75,17 @@ var AllureReporterExtensions;
         return createStepAnnotation({ screen: false, title: null, heading: true });
     }
     AllureReporterExtensions.Heading = Heading;
-    function DescribedScreenedStep(title = null) {
+    function ScreenedStep(title = null) {
         return createStepAnnotation({ screen: true, heading: false, title: title, logClass: true });
     }
-    AllureReporterExtensions.DescribedScreenedStep = DescribedScreenedStep;
-    function ScreenedStep(title = null) {
-        return createStepAnnotation({ screen: true, heading: false, title: title });
-    }
     AllureReporterExtensions.ScreenedStep = ScreenedStep;
-    function DescribedStep(title = null) {
-        return createStepAnnotation({ screen: false, title: title, heading: false, logClass: true });
-    }
-    AllureReporterExtensions.DescribedStep = DescribedStep;
     function Step(title = null) {
-        return createStepAnnotation({ screen: false, title: title, heading: false });
+        return createStepAnnotation({ screen: false, title: title, heading: false, logClass: true });
     }
     AllureReporterExtensions.Step = Step;
     function createStepAnnotation(stepInfo) {
         return (target, methodName, descriptor) => {
-            const methodClassName = target.constructor.name;
+            const methodClassName = target.constructor.name.trim();
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
             let title = stepInfo && stepInfo.title ? stepInfo.title : methodName;
