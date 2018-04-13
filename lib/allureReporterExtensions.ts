@@ -87,18 +87,23 @@ export namespace AllureReporterExtensions {
 
     function createStepAnnotation(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, logClass?: boolean }) {
         return (target, methodName, descriptor: PropertyDescriptor) => {
-            const methodClassName = target.constructor.name.trim();
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
 
-            let title = stepInfo && stepInfo.title ? stepInfo.title : methodName;
-            title = stepInfo && stepInfo.logClass ? `${title} (${methodClassName})` : title;
             const screen = stepInfo && stepInfo.screen;
+            const title = stepInfo ? stepInfo.title : "";
+            const heading = stepInfo && stepInfo.heading;
+            const logClass = stepInfo && stepInfo.logClass;
+
+            const methodDescription = title ? title : methodNametoPlainText(methodName, heading);
+            const methodClassName = target.constructor.name.trim(); // here is space at the start (from where?)
+
             let status = TestStatus.PASSED;
 
             descriptor.value = isOriginalAsync || screen ? async function () {
                 try {
-                    startStep(title, arguments, stepInfo.heading);
+                    const argumentsDescription = argsToPlainText(arguments);
+                    startStep(methodDescription, argumentsDescription, `(${methodClassName})`);
                     return await originalMethod.apply(this, arguments);
                 } catch (error) {
                     status = TestStatus.BROKEN;
@@ -111,7 +116,8 @@ export namespace AllureReporterExtensions {
                 }
             } : function () {
                 try {
-                    startStep(title, arguments, stepInfo.heading);
+                    const argumentsDescription = argsToPlainText(arguments);
+                    startStep(methodDescription, argumentsDescription, `(${methodClassName})`);
                     return originalMethod.apply(this, arguments);
                 } catch (error) {
                     status = TestStatus.BROKEN;
@@ -123,24 +129,24 @@ export namespace AllureReporterExtensions {
         }
     }
 
-    function startStep(methodName: string, args: IArguments, heading = false) {
-        runtime._allure.startStep(completeStepTitle(toStepTitle(methodName, heading), args));
+    function startStep(...descriptions: string[]) {
+        runtime._allure.startStep(descriptions.join(" "));
     }
 
     function endStep(status: TestStatus) {
         runtime._allure.endStep(status);
     }
 
-    function completeStepTitle(title: string, args: IArguments): string {
+    function argsToPlainText(args): string {
         if (!args) {
-            return title;
+            return "";
         }
         (args as any)._map = [].map;
-        const completeArguments = (args as any)._map(a => a.toString()).join();
-        return title + (completeArguments.length === 0 ? '' : ' [' + completeArguments + ']');
+        const completeArguments = args._map(a => a.toString()).join();
+        return completeArguments.length === 0 ? '' : `[${completeArguments.toString()}]`
     }
 
-    function toStepTitle(methodName: string, heading = false): string {
+    function methodNametoPlainText(methodName: string, heading = false): string {
         const stepTitle = methodName
             .replace(/([A-Z])/g, ' $1')
             .replace(/^./, (str) => str.toUpperCase());

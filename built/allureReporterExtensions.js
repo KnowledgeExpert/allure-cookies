@@ -85,16 +85,19 @@ var AllureReporterExtensions;
     AllureReporterExtensions.Step = Step;
     function createStepAnnotation(stepInfo) {
         return (target, methodName, descriptor) => {
-            const methodClassName = target.constructor.name.trim();
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
-            let title = stepInfo && stepInfo.title ? stepInfo.title : methodName;
-            title = stepInfo && stepInfo.logClass ? `${title} (${methodClassName})` : title;
             const screen = stepInfo && stepInfo.screen;
+            const title = stepInfo ? stepInfo.title : "";
+            const heading = stepInfo && stepInfo.heading;
+            const logClass = stepInfo && stepInfo.logClass;
+            const methodDescription = title ? title : methodNametoPlainText(methodName, heading);
+            const methodClassName = target.constructor.name.trim(); // here is space at the start (from where?)
             let status = TestStatus.PASSED;
             descriptor.value = isOriginalAsync || screen ? async function () {
                 try {
-                    startStep(title, arguments, stepInfo.heading);
+                    const argumentsDescription = argsToPlainText(arguments);
+                    startStep(methodDescription, argumentsDescription, `(${methodClassName})`);
                     return await originalMethod.apply(this, arguments);
                 }
                 catch (error) {
@@ -109,7 +112,8 @@ var AllureReporterExtensions;
                 }
             } : function () {
                 try {
-                    startStep(title, arguments, stepInfo.heading);
+                    const argumentsDescription = argsToPlainText(arguments);
+                    startStep(methodDescription, argumentsDescription, `(${methodClassName})`);
                     return originalMethod.apply(this, arguments);
                 }
                 catch (error) {
@@ -122,21 +126,21 @@ var AllureReporterExtensions;
             };
         };
     }
-    function startStep(methodName, args, heading = false) {
-        runtime._allure.startStep(completeStepTitle(toStepTitle(methodName, heading), args));
+    function startStep(...descriptions) {
+        runtime._allure.startStep(descriptions.join(" "));
     }
     function endStep(status) {
         runtime._allure.endStep(status);
     }
-    function completeStepTitle(title, args) {
+    function argsToPlainText(args) {
         if (!args) {
-            return title;
+            return "";
         }
         args._map = [].map;
         const completeArguments = args._map(a => a.toString()).join();
-        return title + (completeArguments.length === 0 ? '' : ' [' + completeArguments + ']');
+        return completeArguments.length === 0 ? '' : `[${completeArguments.toString()}]`;
     }
-    function toStepTitle(methodName, heading = false) {
+    function methodNametoPlainText(methodName, heading = false) {
         const stepTitle = methodName
             .replace(/([A-Z])/g, ' $1')
             .replace(/^./, (str) => str.toUpperCase());
