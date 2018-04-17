@@ -92,12 +92,13 @@ var AllureReporterExtensions;
             const heading = stepInfo && stepInfo.heading;
             const logClass = stepInfo && stepInfo.logClass;
             const methodDescription = title ? title : methodNametoPlainText(methodName, heading);
-            const methodClassName = target.constructor.name.trim(); // here is space at the start (from where?)
+            const rawMethodContextName = target.constructor.name.trim();
+            const methodContextName = rawMethodContextName === `Function` ? `` : `(${rawMethodContextName})`;
             let status = TestStatus.PASSED;
             descriptor.value = isOriginalAsync || screen ? async function () {
                 try {
                     const argumentsDescription = argsToPlainText(arguments);
-                    startStep(methodDescription, argumentsDescription, `(${methodClassName})`);
+                    startStep(methodDescription, argumentsDescription, methodContextName);
                     return await originalMethod.apply(this, arguments);
                 }
                 catch (error) {
@@ -113,7 +114,7 @@ var AllureReporterExtensions;
             } : function () {
                 try {
                     const argumentsDescription = argsToPlainText(arguments);
-                    startStep(methodDescription, argumentsDescription, `(${methodClassName})`);
+                    startStep(methodDescription, argumentsDescription, methodContextName);
                     return originalMethod.apply(this, arguments);
                 }
                 catch (error) {
