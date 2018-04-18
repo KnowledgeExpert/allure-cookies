@@ -7,8 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const allureReporterExtensions_1 = require("./allureReporterExtensions");
-var Heading = allureReporterExtensions_1.AllureReporterExtensions.Heading;
-class Gherkin {
+var Gherkin = allureReporterExtensions_1.AllureReporterExtensions.Gherkin;
+class GherkinHelpers {
     //steps are needed only for verbose reporting
     static GIVEN(stepDescription) {
     }
@@ -22,19 +22,19 @@ class Gherkin {
     }
 }
 __decorate([
-    Heading()
-], Gherkin, "GIVEN", null);
+    Gherkin()
+], GherkinHelpers, "GIVEN", null);
 __decorate([
-    Heading()
-], Gherkin, "WHEN", null);
+    Gherkin()
+], GherkinHelpers, "WHEN", null);
 __decorate([
-    Heading()
-], Gherkin, "THEN", null);
+    Gherkin()
+], GherkinHelpers, "THEN", null);
 __decorate([
-    Heading()
-], Gherkin, "AND", null);
+    Gherkin()
+], GherkinHelpers, "AND", null);
 __decorate([
-    Heading()
-], Gherkin, "USER", null);
-exports.Gherkin = Gherkin;
-//# sourceMappingURL=gherkin.js.map
+    Gherkin()
+], GherkinHelpers, "USER", null);
+exports.GherkinHelpers = GherkinHelpers;
+//# sourceMappingURL=gherkinHelpers.js.map

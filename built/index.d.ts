@@ -1,5 +1,5 @@
 import { AllureReporterExtensions } from "./allureReporterExtensions";
-export { Gherkin } from "./gherkin";
+import { GherkinHelpers } from "./gherkinHelpers";
 export declare const addArgument: typeof AllureReporterExtensions.addArgument;
 export declare const addDescription: typeof AllureReporterExtensions.addDescription;
 export declare const addEnvironment: typeof AllureReporterExtensions.addEnvironment;
@@ -12,3 +12,8 @@ export declare const getJasmineAllureReporter: typeof AllureReporterExtensions.g
 export declare const Step: typeof AllureReporterExtensions.Step;
 export declare const ScreenedStep: typeof AllureReporterExtensions.ScreenedStep;
 export declare const Heading: typeof AllureReporterExtensions.Heading;
+export declare const Gherkin: typeof AllureReporterExtensions.Gherkin;
+export declare const GIVEN: typeof GherkinHelpers.GIVEN;
+export declare const WHEN: typeof GherkinHelpers.WHEN;
+export declare const THEN: typeof GherkinHelpers.THEN;
+export declare const AND: typeof GherkinHelpers.AND;

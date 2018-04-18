@@ -1,6 +1,5 @@
 import {AllureReporterExtensions} from "./allureReporterExtensions";
-
-export {Gherkin} from "./gherkin";
+import {GherkinHelpers} from "./gherkinHelpers";
 
 export const addArgument = AllureReporterExtensions.addArgument;
 export const addDescription = AllureReporterExtensions.addDescription;
@@ -16,3 +15,9 @@ export const getJasmineAllureReporter = AllureReporterExtensions.getJasmineAllur
 export const Step = AllureReporterExtensions.Step;
 export const ScreenedStep = AllureReporterExtensions.ScreenedStep;
 export const Heading = AllureReporterExtensions.Heading;
+export const Gherkin = AllureReporterExtensions.Gherkin;
+
+export const GIVEN = GherkinHelpers.GIVEN;
+export const WHEN = GherkinHelpers.WHEN;
+export const THEN = GherkinHelpers.THEN;
+export const AND = GherkinHelpers.AND;

@@ -1,25 +1,26 @@
 import {AllureReporterExtensions} from "./allureReporterExtensions";
 import Heading = AllureReporterExtensions.Heading;
+import Gherkin = AllureReporterExtensions.Gherkin;
 
-export class Gherkin {
+export class GherkinHelpers {
     //steps are needed only for verbose reporting
-    @Heading()
+    @Gherkin()
     public static GIVEN(stepDescription?: string) {
     }
 
-    @Heading()
+    @Gherkin()
     public static WHEN(stepDescription?: string) {
     }
 
-    @Heading()
+    @Gherkin()
     public static THEN(stepDescription?: string) {
     }
 
-    @Heading()
+    @Gherkin()
     public static AND(stepDescription?: string) {
     }
 
-    @Heading()
+    @Gherkin()
     public static USER(stepDescription?: string) {
     }
 }

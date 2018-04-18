@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const allureReporterExtensions_1 = require("./allureReporterExtensions");
-var gherkin_1 = require("./gherkin");
-exports.Gherkin = gherkin_1.Gherkin;
+const gherkinHelpers_1 = require("./gherkinHelpers");
 exports.addArgument = allureReporterExtensions_1.AllureReporterExtensions.addArgument;
 exports.addDescription = allureReporterExtensions_1.AllureReporterExtensions.addDescription;
 exports.addEnvironment = allureReporterExtensions_1.AllureReporterExtensions.addEnvironment;
@@ -15,4 +14,9 @@ exports.getJasmineAllureReporter = allureReporterExtensions_1.AllureReporterExte
 exports.Step = allureReporterExtensions_1.AllureReporterExtensions.Step;
 exports.ScreenedStep = allureReporterExtensions_1.AllureReporterExtensions.ScreenedStep;
 exports.Heading = allureReporterExtensions_1.AllureReporterExtensions.Heading;
+exports.Gherkin = allureReporterExtensions_1.AllureReporterExtensions.Gherkin;
+exports.GIVEN = gherkinHelpers_1.GherkinHelpers.GIVEN;
+exports.WHEN = gherkinHelpers_1.GherkinHelpers.WHEN;
+exports.THEN = gherkinHelpers_1.GherkinHelpers.THEN;
+exports.AND = gherkinHelpers_1.GherkinHelpers.AND;
 //# sourceMappingURL=index.js.map

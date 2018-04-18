@@ -12,6 +12,7 @@ export declare namespace AllureReporterExtensions {
     function addFeature(name: string): void;
     function addStory(story: string): void;
     function addEnvironment(name: string, value: string): void;
+    function Gherkin(): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
     function Heading(): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
     function ScreenedStep(title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
     function Step(title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;

@@ -73,6 +73,10 @@ export namespace AllureReporterExtensions {
         runtime.addEnvironment(name, value);
     }
 
+    export function Gherkin() {
+        return createStepAnnotation({screen: false, title: null as string, heading: false, gherkin: true});
+    }
+
     export function Heading() {
         return createStepAnnotation({screen: false, title: null as string, heading: true});
     }
@@ -85,7 +89,7 @@ export namespace AllureReporterExtensions {
         return createStepAnnotation({screen: false, title: title, heading: false, logClass: true});
     }
 
-    function createStepAnnotation(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, logClass?: boolean }) {
+    function createStepAnnotation(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, logClass?: boolean, gherkin?: boolean }) {
         return (target, methodName, descriptor: PropertyDescriptor) => {
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
@@ -94,39 +98,52 @@ export namespace AllureReporterExtensions {
             const title = stepInfo ? stepInfo.title : "";
             const heading = stepInfo && stepInfo.heading;
             const logClass = stepInfo && stepInfo.logClass;
+            const gherkin = stepInfo && stepInfo.gherkin;
 
-            const methodDescription = title ? title : methodNametoPlainText(methodName, heading);
+            const methodDescription = title ? title : methodNametoPlainText(methodName, heading, gherkin);
             const rawMethodContextName = target.constructor.name.trim();
             const methodContextName = rawMethodContextName === `Function` ? `` : `(${rawMethodContextName})`;
 
-            let status = TestStatus.PASSED;
+            let testStatus = TestStatus.PASSED;
 
-            descriptor.value = isOriginalAsync || screen ? async function () {
-                try {
-                    const argumentsDescription = argsToPlainText(arguments);
-                    startStep(methodDescription, argumentsDescription, methodContextName);
-                    return await originalMethod.apply(this, arguments);
-                } catch (error) {
-                    status = TestStatus.BROKEN;
-                    throw error;
-                } finally {
-                    if (screen) {
-                        await AllureReporterExtensions.attachScreenshot();
+            if (gherkin) {
+                descriptor.value = function () {
+                    try {
+                        const argumentsDescription = argsToPlainText(arguments);
+                        startStep(methodDescription, '-', argumentsDescription);
+                        return originalMethod.apply(this, arguments);
+                    } finally {
+                        endStep(testStatus);
                     }
-                    endStep(status);
                 }
-            } : function () {
-                try {
-                    const argumentsDescription = argsToPlainText(arguments);
-                    startStep(methodDescription, argumentsDescription, methodContextName);
-                    return originalMethod.apply(this, arguments);
-                } catch (error) {
-                    status = TestStatus.BROKEN;
-                    throw error;
-                } finally {
-                    endStep(status);
-                }
-            };
+            } else {
+                descriptor.value = isOriginalAsync || screen ? async function () {
+                    try {
+                        const argumentsDescription = `[${argsToPlainText(arguments)}]`;
+                        startStep(methodDescription, argumentsDescription, methodContextName);
+                        return await originalMethod.apply(this, arguments);
+                    } catch (error) {
+                        testStatus = TestStatus.BROKEN;
+                        throw error;
+                    } finally {
+                        if (screen) {
+                            await AllureReporterExtensions.attachScreenshot();
+                        }
+                        endStep(testStatus);
+                    }
+                } : function () {
+                    try {
+                        const argumentsDescription = `[${argsToPlainText(arguments)}]`;
+                        startStep(methodDescription, argumentsDescription, methodContextName);
+                        return originalMethod.apply(this, arguments);
+                    } catch (error) {
+                        testStatus = TestStatus.BROKEN;
+                        throw error;
+                    } finally {
+                        endStep(testStatus);
+                    }
+                };
+            }
         }
     }
 
@@ -144,14 +161,20 @@ export namespace AllureReporterExtensions {
         }
         (args as any)._map = [].map;
         const completeArguments = args._map(a => a.toString()).join();
-        return completeArguments.length === 0 ? '' : `[${completeArguments.toString()}]`
+        return completeArguments.length === 0 ? '' : completeArguments.toString();
     }
 
-    function methodNametoPlainText(methodName: string, heading = false): string {
+    function methodNametoPlainText(methodName: string, heading = false, gherkin = false): string {
         const stepTitle = methodName
             .replace(/([A-Z])/g, ' $1')
             .replace(/^./, (str) => str.toUpperCase());
-        return heading ? `* ${stepTitle.toUpperCase()}` : stepTitle;
+        if (heading) {
+            return `* ${stepTitle.toUpperCase()}`;
+        } else if (gherkin) {
+            return stepTitle.replace(/ /g, '').toUpperCase();
+        } else {
+            return stepTitle;
+        }
     }
 
     enum TestStatus {

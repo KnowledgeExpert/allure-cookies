@@ -1,4 +1,4 @@
-export declare class Gherkin {
+export declare class GherkinHelpers {
     static GIVEN(stepDescription?: string): void;
     static WHEN(stepDescription?: string): void;
     static THEN(stepDescription?: string): void;
