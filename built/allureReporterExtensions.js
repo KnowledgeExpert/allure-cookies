@@ -115,7 +115,8 @@ var AllureReporterExtensions;
             else {
                 descriptor.value = isOriginalAsync || screen ? async function () {
                     try {
-                        const argumentsDescription = `[${argsToPlainText(arguments)}]`;
+                        const argumentsRawDescription = argsToPlainText(arguments);
+                        const argumentsDescription = argumentsRawDescription ? `[${argumentsRawDescription}]` : ``;
                         startStep(methodDescription, argumentsDescription, methodContextName);
                         return await originalMethod.apply(this, arguments);
                     }
@@ -131,7 +132,8 @@ var AllureReporterExtensions;
                     }
                 } : function () {
                     try {
-                        const argumentsDescription = `[${argsToPlainText(arguments)}]`;
+                        const argumentsRawDescription = argsToPlainText(arguments);
+                        const argumentsDescription = argumentsRawDescription ? `[${argumentsRawDescription}]` : ``;
                         startStep(methodDescription, argumentsDescription, methodContextName);
                         return originalMethod.apply(this, arguments);
                     }
@@ -147,7 +149,7 @@ var AllureReporterExtensions;
         };
     }
     function startStep(...descriptions) {
-        runtime._allure.startStep(descriptions.join(" "));
+        runtime._allure.startStep(descriptions.filter(descr => descr.length !== 0).join(" "));
     }
     function endStep(status) {
         runtime._allure.endStep(status);
