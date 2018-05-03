@@ -97,8 +97,11 @@ var AllureReporterExtensions;
             const logClass = stepInfo && stepInfo.logClass;
             const gherkin = stepInfo && stepInfo.gherkin;
             const methodDescription = title ? title : methodNametoPlainText(methodName, heading, gherkin);
-            const rawMethodContextName = target.constructor.name.trim();
-            const methodContextName = rawMethodContextName === `Function` ? `` : `(${rawMethodContextName})`;
+            const methodContextName = target.toString() !== '[object Object]'
+                ? target.toString()
+                : target.constructor.name.trim() === 'Function'
+                    ? ''
+                    : `(${target.constructor.name.trim()})`;
             let testStatus = TestStatus.PASSED;
             if (gherkin) {
                 descriptor.value = function () {
