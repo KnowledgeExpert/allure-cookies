@@ -97,11 +97,7 @@ var AllureReporterExtensions;
             const logClass = stepInfo && stepInfo.logClass;
             const gherkin = stepInfo && stepInfo.gherkin;
             const methodDescription = title ? title : methodNametoPlainText(methodName, heading, gherkin);
-            const methodContextName = target.toString() !== '[object Object]'
-                ? target.toString()
-                : target.constructor.name.trim() === 'Function'
-                    ? ''
-                    : `(${target.constructor.name.trim()})`;
+            const methodContextName = target.constructor.name.trim() !== 'Function' ? `(${target.constructor.name.trim()})` : '';
             let testStatus = TestStatus.PASSED;
             if (gherkin) {
                 descriptor.value = function () {
@@ -118,9 +114,9 @@ var AllureReporterExtensions;
             else {
                 descriptor.value = isOriginalAsync || screen ? async function () {
                     try {
-                        const argumentsRawDescription = argsToPlainText(arguments);
-                        const argumentsDescription = argumentsRawDescription ? `[${argumentsRawDescription}]` : ``;
-                        startStep(methodDescription, argumentsDescription, methodContextName);
+                        const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
+                        const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
+                        startStep(methodDescription, argumentsDescription, methodContextDescription);
                         return await originalMethod.apply(this, arguments);
                     }
                     catch (error) {
@@ -135,9 +131,9 @@ var AllureReporterExtensions;
                     }
                 } : function () {
                     try {
-                        const argumentsRawDescription = argsToPlainText(arguments);
-                        const argumentsDescription = argumentsRawDescription ? `[${argumentsRawDescription}]` : ``;
-                        startStep(methodDescription, argumentsDescription, methodContextName);
+                        const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
+                        const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
+                        startStep(methodDescription, argumentsDescription, methodContextDescription);
                         return originalMethod.apply(this, arguments);
                     }
                     catch (error) {
