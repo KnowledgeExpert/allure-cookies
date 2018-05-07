@@ -8,9 +8,7 @@ var AllureReporterExtensions;
     const core = new AllureCore();
     const runtime = new AllureRuntime(core);
     let screenshotProvider;
-    // export function addToJasmine() {
-    //     jasmine.getEnv().addReporter(getAllureReporter({basePath: './build', resultsDir: 'allure-results'}));
-    // }
+    let whitelistTags = [] || (process.env.ALLURE_TAGS_TO_REPORT && process.env.ALLURE_TAGS_TO_REPORT.split(',').filter(s => s.length !== 0));
     // export async function setEnvironmentAsFeatureAndStory() {
     //     const caps = (await browser.getProcessedConfig()).capabilities;
     //     AllureReporterExtensions.addFeature(`${caps.browserName} ${caps.version || 'defaultVersion'}`);
@@ -27,6 +25,10 @@ var AllureReporterExtensions;
     //         }
     //     }
     // }
+    function reportStepsWithTags(tags) {
+        whitelistTags = tags;
+    }
+    AllureReporterExtensions.reportStepsWithTags = reportStepsWithTags;
     function setScreenshotProvider(screenshotFunction) {
         screenshotProvider = screenshotFunction;
     }
@@ -72,19 +74,19 @@ var AllureReporterExtensions;
     }
     AllureReporterExtensions.addEnvironment = addEnvironment;
     function Gherkin() {
-        return createStepAnnotation({ screen: false, title: null, heading: false, gherkin: true });
+        return createStepAnnotation({ gherkin: true });
     }
     AllureReporterExtensions.Gherkin = Gherkin;
     function Heading() {
-        return createStepAnnotation({ screen: false, title: null, heading: true });
+        return createStepAnnotation({ heading: true });
     }
     AllureReporterExtensions.Heading = Heading;
-    function ScreenedStep(title = null) {
-        return createStepAnnotation({ screen: true, heading: false, title: title, logClass: true });
+    function ScreenedStep(tags = [], title = null) {
+        return createStepAnnotation({ screen: true, title: title, tags: tags });
     }
     AllureReporterExtensions.ScreenedStep = ScreenedStep;
-    function Step(title = null) {
-        return createStepAnnotation({ screen: false, title: title, heading: false, logClass: true });
+    function Step(tags = [], title = null) {
+        return createStepAnnotation({ title: title, tags: tags });
     }
     AllureReporterExtensions.Step = Step;
     function createStepAnnotation(stepInfo) {
@@ -92,58 +94,61 @@ var AllureReporterExtensions;
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
             const screen = stepInfo && stepInfo.screen;
-            const title = stepInfo ? stepInfo.title : "";
+            const title = stepInfo ? stepInfo.title : '';
             const heading = stepInfo && stepInfo.heading;
-            const logClass = stepInfo && stepInfo.logClass;
             const gherkin = stepInfo && stepInfo.gherkin;
-            const methodDescription = title ? title : methodNametoPlainText(methodName, heading, gherkin);
-            const methodContextName = target.constructor.name.trim() !== 'Function' ? `(${target.constructor.name.trim()})` : '';
-            let testStatus = TestStatus.PASSED;
-            if (gherkin) {
-                descriptor.value = function () {
-                    try {
-                        const argumentsDescription = argsToPlainText(arguments);
-                        startStep(methodDescription, '-', argumentsDescription);
-                        return originalMethod.apply(this, arguments);
-                    }
-                    finally {
-                        endStep(testStatus);
-                    }
-                };
-            }
-            else {
-                descriptor.value = isOriginalAsync || screen ? async function () {
-                    try {
-                        const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
-                        const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
-                        startStep(methodDescription, argumentsDescription, methodContextDescription);
-                        return await originalMethod.apply(this, arguments);
-                    }
-                    catch (error) {
-                        testStatus = TestStatus.BROKEN;
-                        throw error;
-                    }
-                    finally {
-                        if (screen) {
-                            await AllureReporterExtensions.attachScreenshot();
+            const tags = stepInfo && stepInfo.tags;
+            const isReportStep = isHaveWhitelistTag(tags);
+            if (isReportStep) {
+                const methodDescription = title ? title : methodNametoPlainText(methodName, heading, gherkin);
+                const methodContextName = target.constructor.name.trim() !== 'Function' ? `(${target.constructor.name.trim()})` : '';
+                let testStatus = TestStatus.PASSED;
+                if (gherkin) {
+                    descriptor.value = function () {
+                        try {
+                            const argumentsDescription = argsToPlainText(arguments);
+                            startStep(methodDescription, '-', argumentsDescription);
+                            return originalMethod.apply(this, arguments);
                         }
-                        endStep(testStatus);
-                    }
-                } : function () {
-                    try {
-                        const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
-                        const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
-                        startStep(methodDescription, argumentsDescription, methodContextDescription);
-                        return originalMethod.apply(this, arguments);
-                    }
-                    catch (error) {
-                        testStatus = TestStatus.BROKEN;
-                        throw error;
-                    }
-                    finally {
-                        endStep(testStatus);
-                    }
-                };
+                        finally {
+                            endStep(testStatus);
+                        }
+                    };
+                }
+                else {
+                    descriptor.value = isOriginalAsync || screen ? async function () {
+                        try {
+                            const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
+                            const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
+                            startStep(methodDescription, argumentsDescription, methodContextDescription);
+                            return await originalMethod.apply(this, arguments);
+                        }
+                        catch (error) {
+                            testStatus = TestStatus.BROKEN;
+                            throw error;
+                        }
+                        finally {
+                            if (screen) {
+                                await AllureReporterExtensions.attachScreenshot();
+                            }
+                            endStep(testStatus);
+                        }
+                    } : function () {
+                        try {
+                            const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
+                            const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
+                            startStep(methodDescription, argumentsDescription, methodContextDescription);
+                            return originalMethod.apply(this, arguments);
+                        }
+                        catch (error) {
+                            testStatus = TestStatus.BROKEN;
+                            throw error;
+                        }
+                        finally {
+                            endStep(testStatus);
+                        }
+                    };
+                }
             }
         };
     }
@@ -152,6 +157,9 @@ var AllureReporterExtensions;
     }
     function endStep(status) {
         runtime._allure.endStep(status);
+    }
+    function isHaveWhitelistTag(tags) {
+        return whitelistTags.length === 0 || (tags.filter(tag => whitelistTags.includes(tag)).length > 0);
     }
     function argsToPlainText(args) {
         if (!args) {

@@ -1,5 +1,6 @@
 /// <reference types="node" />
 export declare namespace AllureReporterExtensions {
+    function reportStepsWithTags(tags: string[]): void;
     function setScreenshotProvider(screenshotFunction: Function): void;
     function getJasmineAllureReporter(options?: {
         basePath: string;
@@ -14,6 +15,6 @@ export declare namespace AllureReporterExtensions {
     function addEnvironment(name: string, value: string): void;
     function Gherkin(): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
     function Heading(): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
-    function ScreenedStep(title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
-    function Step(title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
+    function ScreenedStep(tags?: any[], title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
+    function Step(tags?: any[], title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
 }

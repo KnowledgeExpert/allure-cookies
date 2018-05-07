@@ -8,10 +8,7 @@ export namespace AllureReporterExtensions {
     const core = new AllureCore();
     const runtime = new AllureRuntime(core);
     let screenshotProvider;
-
-    // export function addToJasmine() {
-    //     jasmine.getEnv().addReporter(getAllureReporter({basePath: './build', resultsDir: 'allure-results'}));
-    // }
+    let whitelistTags: string[] = [] || (process.env.ALLURE_TAGS_TO_REPORT && process.env.ALLURE_TAGS_TO_REPORT.split(',').filter(s => s.length !== 0));
 
     // export async function setEnvironmentAsFeatureAndStory() {
     //     const caps = (await browser.getProcessedConfig()).capabilities;
@@ -29,6 +26,10 @@ export namespace AllureReporterExtensions {
     //         }
     //     }
     // }
+
+    export function reportStepsWithTags(tags: string[]) {
+        whitelistTags = tags;
+    }
 
     export function setScreenshotProvider(screenshotFunction: Function) {
         screenshotProvider = screenshotFunction;
@@ -74,78 +75,84 @@ export namespace AllureReporterExtensions {
     }
 
     export function Gherkin() {
-        return createStepAnnotation({screen: false, title: null as string, heading: false, gherkin: true});
+        return createStepAnnotation({gherkin: true});
     }
 
     export function Heading() {
-        return createStepAnnotation({screen: false, title: null as string, heading: true});
+        return createStepAnnotation({heading: true});
     }
 
-    export function ScreenedStep(title = null as string) {
-        return createStepAnnotation({screen: true, heading: false, title: title, logClass: true});
+    export function ScreenedStep(tags = [], title = null as string) {
+        return createStepAnnotation({screen: true, title: title, tags: tags});
     }
 
-    export function Step(title = null as string) {
-        return createStepAnnotation({screen: false, title: title, heading: false, logClass: true});
+    export function Step(tags = [], title = null as string) {
+        return createStepAnnotation({title: title, tags: tags});
     }
 
-    function createStepAnnotation(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, logClass?: boolean, gherkin?: boolean }) {
+    function createStepAnnotation(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, gherkin?: boolean, tags?: string[] }) {
         return (target, methodName, descriptor: PropertyDescriptor) => {
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
 
             const screen = stepInfo && stepInfo.screen;
-            const title = stepInfo ? stepInfo.title : "";
+            const title = stepInfo ? stepInfo.title : '';
             const heading = stepInfo && stepInfo.heading;
-            const logClass = stepInfo && stepInfo.logClass;
             const gherkin = stepInfo && stepInfo.gherkin;
+            const tags = stepInfo && stepInfo.tags;
 
-            const methodDescription = title ? title : methodNametoPlainText(methodName, heading, gherkin);
-            const methodContextName = target.constructor.name.trim() !== 'Function' ? `(${target.constructor.name.trim()})` : '';
+            const isReportStep = isHaveWhitelistTag(tags);
 
-            let testStatus = TestStatus.PASSED;
+            if (isReportStep) {
+                const methodDescription = title ? title : methodNametoPlainText(methodName, heading, gherkin);
+                const methodContextName = target.constructor.name.trim() !== 'Function' ? `(${target.constructor.name.trim()})` : '';
 
-            if (gherkin) {
-                descriptor.value = function () {
-                    try {
-                        const argumentsDescription = argsToPlainText(arguments);
-                        startStep(methodDescription, '-', argumentsDescription);
-                        return originalMethod.apply(this, arguments);
-                    } finally {
-                        endStep(testStatus);
-                    }
-                }
-            } else {
-                descriptor.value = isOriginalAsync || screen ? async function () {
-                    try {
-                        const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
-                        const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
+                let testStatus = TestStatus.PASSED;
 
-                        startStep(methodDescription, argumentsDescription, methodContextDescription);
-                        return await originalMethod.apply(this, arguments);
-                    } catch (error) {
-                        testStatus = TestStatus.BROKEN;
-                        throw error;
-                    } finally {
-                        if (screen) {
-                            await AllureReporterExtensions.attachScreenshot();
+                if (gherkin) {
+                    descriptor.value = function () {
+                        try {
+                            const argumentsDescription = argsToPlainText(arguments);
+                            startStep(methodDescription, '-', argumentsDescription);
+                            return originalMethod.apply(this, arguments);
+                        } finally {
+                            endStep(testStatus);
                         }
-                        endStep(testStatus);
                     }
-                } : function () {
-                    try {
-                        const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
-                        const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
+                } else {
+                    descriptor.value = isOriginalAsync || screen ? async function () {
+                        try {
+                            const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
+                            const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
 
-                        startStep(methodDescription, argumentsDescription, methodContextDescription);
-                        return originalMethod.apply(this, arguments);
-                    } catch (error) {
-                        testStatus = TestStatus.BROKEN;
-                        throw error;
-                    } finally {
-                        endStep(testStatus);
-                    }
-                };
+                            startStep(methodDescription, argumentsDescription, methodContextDescription);
+
+                            return await originalMethod.apply(this, arguments);
+                        } catch (error) {
+                            testStatus = TestStatus.BROKEN;
+                            throw error;
+                        } finally {
+                            if (screen) {
+                                await AllureReporterExtensions.attachScreenshot();
+                            }
+                            endStep(testStatus);
+                        }
+                    } : function () {
+                        try {
+                            const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
+                            const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
+
+                            startStep(methodDescription, argumentsDescription, methodContextDescription);
+
+                            return originalMethod.apply(this, arguments);
+                        } catch (error) {
+                            testStatus = TestStatus.BROKEN;
+                            throw error;
+                        } finally {
+                            endStep(testStatus);
+                        }
+                    };
+                }
             }
         }
     }
@@ -156,6 +163,10 @@ export namespace AllureReporterExtensions {
 
     function endStep(status: TestStatus) {
         runtime._allure.endStep(status);
+    }
+
+    function isHaveWhitelistTag(tags: string[]): boolean {
+        return whitelistTags.length === 0 || (tags.filter(tag => whitelistTags.includes(tag)).length > 0);
     }
 
     function argsToPlainText(args): string {
