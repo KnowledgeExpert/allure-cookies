@@ -29,7 +29,7 @@ export const runtime = {
     startstep(...descriptions: string[]) {
         AllureReporterExtensions.startStep(...descriptions);
     },
-    endstep(status?: TestStatus) {
-        AllureReporterExtensions.endStep(status);
+    endstep(stepFailed = false) {
+        AllureReporterExtensions.endStep(stepFailed ? TestStatus.BROKEN : TestStatus.PASSED);
     }
 };

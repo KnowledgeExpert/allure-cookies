@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const allureReporterExtensions_1 = require("./allureReporterExtensions");
 const gherkinHelpers_1 = require("./gherkinHelpers");
+var TestStatus = allureReporterExtensions_1.AllureReporterExtensions.TestStatus;
 exports.addArgument = allureReporterExtensions_1.AllureReporterExtensions.addArgument;
 exports.addDescription = allureReporterExtensions_1.AllureReporterExtensions.addDescription;
 exports.addEnvironment = allureReporterExtensions_1.AllureReporterExtensions.addEnvironment;
@@ -24,8 +25,8 @@ exports.runtime = {
     startstep(...descriptions) {
         allureReporterExtensions_1.AllureReporterExtensions.startStep(...descriptions);
     },
-    endstep(status) {
-        allureReporterExtensions_1.AllureReporterExtensions.endStep(status);
+    endstep(stepFailed = false) {
+        allureReporterExtensions_1.AllureReporterExtensions.endStep(stepFailed ? TestStatus.BROKEN : TestStatus.PASSED);
     }
 };
 //# sourceMappingURL=index.js.map
