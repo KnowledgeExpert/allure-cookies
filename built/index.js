@@ -20,4 +20,12 @@ exports.GIVEN = gherkinHelpers_1.GherkinHelpers.GIVEN;
 exports.WHEN = gherkinHelpers_1.GherkinHelpers.WHEN;
 exports.THEN = gherkinHelpers_1.GherkinHelpers.THEN;
 exports.AND = gherkinHelpers_1.GherkinHelpers.AND;
+exports.runtime = {
+    startstep(...descriptions) {
+        allureReporterExtensions_1.AllureReporterExtensions.startStep(...descriptions);
+    },
+    endstep(status) {
+        allureReporterExtensions_1.AllureReporterExtensions.endStep(status);
+    }
+};
 //# sourceMappingURL=index.js.map

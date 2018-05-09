@@ -157,11 +157,11 @@ export namespace AllureReporterExtensions {
         }
     }
 
-    function startStep(...descriptions: string[]) {
+    export function startStep(...descriptions: string[]) {
         runtime._allure.startStep(descriptions.filter(descr => descr.length !== 0).join(" "));
     }
 
-    function endStep(status: TestStatus) {
+    export function endStep(status = TestStatus.PASSED) {
         runtime._allure.endStep(status);
     }
 
@@ -191,7 +191,7 @@ export namespace AllureReporterExtensions {
         }
     }
 
-    enum TestStatus {
+    export enum TestStatus {
         PASSED = 'passed',
         BROKEN = 'broken'
     }

@@ -1,5 +1,6 @@
 import {AllureReporterExtensions} from "./allureReporterExtensions";
 import {GherkinHelpers} from "./gherkinHelpers";
+import TestStatus = AllureReporterExtensions.TestStatus;
 
 export const addArgument = AllureReporterExtensions.addArgument;
 export const addDescription = AllureReporterExtensions.addDescription;
@@ -23,3 +24,12 @@ export const GIVEN = GherkinHelpers.GIVEN;
 export const WHEN = GherkinHelpers.WHEN;
 export const THEN = GherkinHelpers.THEN;
 export const AND = GherkinHelpers.AND;
+
+export const runtime = {
+    startstep(...descriptions: string[]) {
+        AllureReporterExtensions.startStep(...descriptions);
+    },
+    endstep(status?: TestStatus) {
+        AllureReporterExtensions.endStep(status);
+    }
+};

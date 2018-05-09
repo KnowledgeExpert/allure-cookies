@@ -155,9 +155,11 @@ var AllureReporterExtensions;
     function startStep(...descriptions) {
         runtime._allure.startStep(descriptions.filter(descr => descr.length !== 0).join(" "));
     }
-    function endStep(status) {
+    AllureReporterExtensions.startStep = startStep;
+    function endStep(status = TestStatus.PASSED) {
         runtime._allure.endStep(status);
     }
+    AllureReporterExtensions.endStep = endStep;
     function isHaveWhitelistTag(tags) {
         return whitelistTags.length === 0 || (tags.filter(tag => whitelistTags.includes(tag)).length > 0);
     }
@@ -187,6 +189,6 @@ var AllureReporterExtensions;
     (function (TestStatus) {
         TestStatus["PASSED"] = "passed";
         TestStatus["BROKEN"] = "broken";
-    })(TestStatus || (TestStatus = {}));
+    })(TestStatus = AllureReporterExtensions.TestStatus || (AllureReporterExtensions.TestStatus = {}));
 })(AllureReporterExtensions = exports.AllureReporterExtensions || (exports.AllureReporterExtensions = {}));
 //# sourceMappingURL=allureReporterExtensions.js.map
