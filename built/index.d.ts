@@ -20,5 +20,5 @@ export declare const THEN: typeof GherkinHelpers.THEN;
 export declare const AND: typeof GherkinHelpers.AND;
 export declare const runtime: {
     startstep(...descriptions: string[]): void;
-    endstep(stepFailed?: boolean): void;
+    endstep(stepSuccess?: boolean): void;
 };

@@ -25,8 +25,8 @@ exports.runtime = {
     startstep(...descriptions) {
         allureReporterExtensions_1.AllureReporterExtensions.startStep(...descriptions);
     },
-    endstep(stepFailed = false) {
-        allureReporterExtensions_1.AllureReporterExtensions.endStep(stepFailed ? TestStatus.BROKEN : TestStatus.PASSED);
+    endstep(stepSuccess = true) {
+        allureReporterExtensions_1.AllureReporterExtensions.endStep(stepSuccess ? TestStatus.PASSED : TestStatus.BROKEN);
     }
 };
 //# sourceMappingURL=index.js.map
