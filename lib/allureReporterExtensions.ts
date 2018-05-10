@@ -158,7 +158,10 @@ export namespace AllureReporterExtensions {
     }
 
     export function startStep(...descriptions: string[]) {
-        runtime._allure.startStep(descriptions.filter(descr => descr.length !== 0).join(" "));
+        if (!descriptions) {
+            throw new Error(`Cannot start step with arguments '${descriptions}'`);
+        }
+        runtime._allure.startStep(descriptions.filter(description => description.length !== 0).join(" "));
     }
 
     export function endStep(status = TestStatus.PASSED) {
