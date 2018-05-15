@@ -1,5 +1,5 @@
-import {AllureReporterExtensions} from "./allureReporterExtensions";
-import {GherkinHelpers} from "./gherkinHelpers";
+import {AllureReporterExtensions} from './allureReporterExtensions';
+import {GherkinHelpers} from './gherkinHelpers';
 import TestStatus = AllureReporterExtensions.TestStatus;
 
 export const addArgument = AllureReporterExtensions.addArgument;

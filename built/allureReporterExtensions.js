@@ -40,7 +40,7 @@ var AllureReporterExtensions;
         }, core);
     }
     AllureReporterExtensions.getJasmineAllureReporter = getJasmineAllureReporter;
-    async function attachScreenshot(description = "Screenshot") {
+    async function attachScreenshot(description = 'Screenshot') {
         try {
             const png = await screenshotProvider();
             AllureReporterExtensions.createAttachment(description, new Buffer(png, 'base64'), 'image/png');
@@ -156,7 +156,7 @@ var AllureReporterExtensions;
         if (!descriptions) {
             throw new Error(`Cannot start step with arguments '${descriptions}'`);
         }
-        runtime._allure.startStep(descriptions.filter(description => description.length !== 0).join(" "));
+        runtime._allure.startStep(descriptions.filter(description => description.length !== 0).join(' '));
     }
     AllureReporterExtensions.startStep = startStep;
     function endStep(status = TestStatus.PASSED) {
@@ -168,7 +168,7 @@ var AllureReporterExtensions;
     }
     function argsToPlainText(args) {
         if (!args) {
-            return "";
+            return '';
         }
         args._map = [].map;
         const completeArguments = args._map(a => a.toString()).join();

@@ -1,5 +1,5 @@
-import { AllureReporterExtensions } from "./allureReporterExtensions";
-import { GherkinHelpers } from "./gherkinHelpers";
+import { AllureReporterExtensions } from './allureReporterExtensions';
+import { GherkinHelpers } from './gherkinHelpers';
 export declare const addArgument: typeof AllureReporterExtensions.addArgument;
 export declare const addDescription: typeof AllureReporterExtensions.addDescription;
 export declare const addEnvironment: typeof AllureReporterExtensions.addEnvironment;

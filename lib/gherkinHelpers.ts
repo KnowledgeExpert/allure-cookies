@@ -1,4 +1,4 @@
-import {AllureReporterExtensions} from "./allureReporterExtensions";
+import {AllureReporterExtensions} from './allureReporterExtensions';
 import Heading = AllureReporterExtensions.Heading;
 import Gherkin = AllureReporterExtensions.Gherkin;
 

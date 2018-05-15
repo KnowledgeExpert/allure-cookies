@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from 'path';
 
 export default function JasmineAllureReporter(userDefinedConfig = {basePath: '.', resultsDir: 'allure-results'}, allure: any) {
 

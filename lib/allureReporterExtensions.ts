@@ -1,6 +1,6 @@
 import * as AllureCore from 'allure-js-commons';
 import * as AllureRuntime from 'allure-js-commons/runtime';
-import JasmineAllureReporter from "./jasmineAllureReporter";
+import JasmineAllureReporter from './jasmineAllureReporter';
 
 
 export namespace AllureReporterExtensions {
@@ -42,7 +42,7 @@ export namespace AllureReporterExtensions {
         }, core);
     }
 
-    export async function attachScreenshot(description = "Screenshot") {
+    export async function attachScreenshot(description = 'Screenshot') {
         try {
             const png = await screenshotProvider();
             AllureReporterExtensions.createAttachment(description, new Buffer(png, 'base64'), 'image/png');
@@ -161,7 +161,7 @@ export namespace AllureReporterExtensions {
         if (!descriptions) {
             throw new Error(`Cannot start step with arguments '${descriptions}'`);
         }
-        runtime._allure.startStep(descriptions.filter(description => description.length !== 0).join(" "));
+        runtime._allure.startStep(descriptions.filter(description => description.length !== 0).join(' '));
     }
 
     export function endStep(status = TestStatus.PASSED) {
@@ -174,7 +174,7 @@ export namespace AllureReporterExtensions {
 
     function argsToPlainText(args): string {
         if (!args) {
-            return "";
+            return '';
         }
         (args as any)._map = [].map;
         const completeArguments = args._map(a => a.toString()).join();
