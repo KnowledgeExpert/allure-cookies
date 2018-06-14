@@ -1,4 +1,5 @@
 Apache Allure-cookies
+
 Copyright 2018 Knowledge Expert SA
 
 This product includes software developed at
