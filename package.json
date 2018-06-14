@@ -1,6 +1,8 @@
 {
   "name": "allure-cookies",
-  "version": "1.0.0",
+  "description": "Allure helpers",
+  "homepage": "https://github.com/KnowledgeExpert/allure-cookies",
+  "version": "0.1.0",
   "main": "built/index.js",
   "typings": "built/index.d.ts",
   "dependencies": {
@@ -11,5 +13,15 @@
   },
   "scripts": {
     "build": "tsc"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/KnowledgeExpert/jasmine-cookies.git"
+  },
+  "keywords": [
+    "allure",
+    "jasmine",
+    "reporter"
+  ],
+  "license": "Apache-2.0"
 }
