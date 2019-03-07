@@ -38,6 +38,8 @@ export const GIVEN = GherkinHelpers.GIVEN;
 export const WHEN = GherkinHelpers.WHEN;
 export const THEN = GherkinHelpers.THEN;
 export const AND = GherkinHelpers.AND;
+export const EXPECT = GherkinHelpers.EXPECT;
+export const WITH = GherkinHelpers.WITH;
 
 export const runtime = {
     startstep(...descriptions: string[]) {

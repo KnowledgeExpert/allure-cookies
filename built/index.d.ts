@@ -18,6 +18,8 @@ export declare const GIVEN: typeof GherkinHelpers.GIVEN;
 export declare const WHEN: typeof GherkinHelpers.WHEN;
 export declare const THEN: typeof GherkinHelpers.THEN;
 export declare const AND: typeof GherkinHelpers.AND;
+export declare const EXPECT: typeof GherkinHelpers.EXPECT;
+export declare const WITH: typeof GherkinHelpers.WITH;
 export declare const runtime: {
     startstep(...descriptions: string[]): void;
     endstep(stepSuccess?: boolean): void;

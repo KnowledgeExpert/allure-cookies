@@ -35,7 +35,15 @@ export class GherkinHelpers {
     }
 
     @Gherkin()
+    public static EXPECT(stepDescription?: string) {
+    }
+
+    @Gherkin()
     public static USER(stepDescription?: string) {
+    }
+
+    @Gherkin()
+    public static WITH(stepDescription?: string) {
     }
 }
 

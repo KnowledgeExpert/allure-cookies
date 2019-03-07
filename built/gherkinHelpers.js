@@ -31,7 +31,11 @@ class GherkinHelpers {
     }
     static AND(stepDescription) {
     }
+    static EXPECT(stepDescription) {
+    }
     static USER(stepDescription) {
+    }
+    static WITH(stepDescription) {
     }
 }
 __decorate([
@@ -48,6 +52,12 @@ __decorate([
 ], GherkinHelpers, "AND", null);
 __decorate([
     Gherkin()
+], GherkinHelpers, "EXPECT", null);
+__decorate([
+    Gherkin()
 ], GherkinHelpers, "USER", null);
+__decorate([
+    Gherkin()
+], GherkinHelpers, "WITH", null);
 exports.GherkinHelpers = GherkinHelpers;
 //# sourceMappingURL=gherkinHelpers.js.map
