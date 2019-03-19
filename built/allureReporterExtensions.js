@@ -104,6 +104,9 @@ var AllureReporterExtensions;
     AllureReporterExtensions.Step = Step;
     function createStepAnnotation(stepInfo) {
         return (target, methodName, descriptor) => {
+            if (arguments.length === 1 && arguments[0] === undefined) {
+                return; // no need to annotate; method should be skipped
+            }
             const originalMethod = descriptor.value;
             const isOriginalAsync = originalMethod[Symbol.toStringTag] === 'AsyncFunction';
             const screen = stepInfo && stepInfo.screen;
