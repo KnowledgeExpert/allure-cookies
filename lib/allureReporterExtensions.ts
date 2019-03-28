@@ -137,7 +137,7 @@ export namespace AllureReporterExtensions {
                     descriptor.value = isOriginalAsync || screen ? async function () {
                         try {
 
-                            if (arguments.length === 1 && arguments[0] === undefined) {
+                            if (arguments.length > 0 && arguments[0] === undefined) {
                                 return; // no need to annotate; method should be skipped
                             }
 
@@ -159,10 +159,10 @@ export namespace AllureReporterExtensions {
                     } : function () {
                         try {
 
-                            if (arguments.length === 1 && arguments[0] === undefined) {
+                            if (arguments.length > 0 && arguments[0] === undefined) {
                                 return; // no need to annotate; method should be skipped
                             }
-                            
+
                             const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
                             const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
 
