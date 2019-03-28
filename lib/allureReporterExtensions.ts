@@ -125,16 +125,21 @@ export namespace AllureReporterExtensions {
 
                 if (gherkin) {
                     descriptor.value = function () {
+                        let stepStarted = false;
                         try {
                             const argumentsDescription = argsToPlainText(arguments);
                             startStep(methodDescription, '-', argumentsDescription);
+                            stepStarted = true;
                             return originalMethod.apply(this, arguments);
                         } finally {
-                            endStep(testStatus);
+                            if (stepStarted) {
+                                endStep(testStatus);
+                            }
                         }
                     }
                 } else {
                     descriptor.value = isOriginalAsync || screen ? async function () {
+                        let stepStarted = false;
                         try {
 
                             if (arguments.length > 0 && arguments[0] === undefined) {
@@ -145,23 +150,23 @@ export namespace AllureReporterExtensions {
                             const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
 
                             startStep(methodDescription, argumentsDescription, methodContextDescription);
+                            stepStarted = true;
 
                             return await originalMethod.apply(this, arguments);
                         } catch (error) {
                             testStatus = TestStatus.BROKEN;
                             throw error;
                         } finally {
-                            if (!(arguments.length > 0 && arguments[0] === undefined)) {
-                                if (screen) {
-                                    await AllureReporterExtensions.attachScreenshot();
-                                }
+
+                            if (stepStarted) {
+                                await AllureReporterExtensions.attachScreenshot();
 
                                 endStep(testStatus);
                             }
                         }
                     } : function () {
+                        let stepStarted = false;
                         try {
-
                             if (arguments.length > 0 && arguments[0] === undefined) {
                                 return originalMethod.apply(this, arguments); // no need to annotate; method should be skipped
                             }
@@ -170,13 +175,14 @@ export namespace AllureReporterExtensions {
                             const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
 
                             startStep(methodDescription, argumentsDescription, methodContextDescription);
+                            stepStarted = true;
 
                             return originalMethod.apply(this, arguments);
                         } catch (error) {
                             testStatus = TestStatus.BROKEN;
                             throw error;
                         } finally {
-                            if (!(arguments.length > 0 && arguments[0] === undefined)) {
+                            if (stepStarted) {
                                 endStep(testStatus);
                             }
                         }

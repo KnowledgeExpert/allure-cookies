@@ -118,25 +118,31 @@ var AllureReporterExtensions;
                 let testStatus = TestStatus.PASSED;
                 if (gherkin) {
                     descriptor.value = function () {
+                        let stepStarted = false;
                         try {
                             const argumentsDescription = argsToPlainText(arguments);
                             startStep(methodDescription, '-', argumentsDescription);
+                            stepStarted = true;
                             return originalMethod.apply(this, arguments);
                         }
                         finally {
-                            endStep(testStatus);
+                            if (stepStarted) {
+                                endStep(testStatus);
+                            }
                         }
                     };
                 }
                 else {
                     descriptor.value = isOriginalAsync || screen ? async function () {
+                        let stepStarted = false;
                         try {
                             if (arguments.length > 0 && arguments[0] === undefined) {
-                                return; // no need to annotate; method should be skipped
+                                return await originalMethod.apply(this, arguments); // no need to annotate; method should be skipped
                             }
                             const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
                             const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
                             startStep(methodDescription, argumentsDescription, methodContextDescription);
+                            stepStarted = true;
                             return await originalMethod.apply(this, arguments);
                         }
                         catch (error) {
@@ -144,19 +150,21 @@ var AllureReporterExtensions;
                             throw error;
                         }
                         finally {
-                            if (screen) {
+                            if (stepStarted) {
                                 await AllureReporterExtensions.attachScreenshot();
+                                endStep(testStatus);
                             }
-                            endStep(testStatus);
                         }
                     } : function () {
+                        let stepStarted = false;
                         try {
                             if (arguments.length > 0 && arguments[0] === undefined) {
-                                return; // no need to annotate; method should be skipped
+                                return originalMethod.apply(this, arguments); // no need to annotate; method should be skipped
                             }
                             const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
                             const methodContextDescription = this.toString() !== '[object Object]' ? this.toString() : methodContextName;
                             startStep(methodDescription, argumentsDescription, methodContextDescription);
+                            stepStarted = true;
                             return originalMethod.apply(this, arguments);
                         }
                         catch (error) {
@@ -164,7 +172,9 @@ var AllureReporterExtensions;
                             throw error;
                         }
                         finally {
-                            endStep(testStatus);
+                            if (stepStarted) {
+                                endStep(testStatus);
+                            }
                         }
                     };
                 }
