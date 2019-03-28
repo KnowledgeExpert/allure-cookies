@@ -212,7 +212,7 @@ export namespace AllureReporterExtensions {
             return '';
         }
         (args as any)._map = [].map;
-        const completeArguments = args._map(a => a.toString()).join();
+        const completeArguments = args._map(a => a.toString() === '[object Object]' ? '...' : a.toString()).join();
         return completeArguments.length === 0 ? '' : completeArguments.toString();
     }
 
