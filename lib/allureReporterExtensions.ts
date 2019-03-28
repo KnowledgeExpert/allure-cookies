@@ -138,7 +138,7 @@ export namespace AllureReporterExtensions {
                         try {
 
                             if (arguments.length > 0 && arguments[0] === undefined) {
-                                return; // no need to annotate; method should be skipped
+                                return await originalMethod.apply(this, arguments); // no need to annotate; method should be skipped
                             }
 
                             const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
@@ -151,16 +151,19 @@ export namespace AllureReporterExtensions {
                             testStatus = TestStatus.BROKEN;
                             throw error;
                         } finally {
-                            if (screen) {
-                                await AllureReporterExtensions.attachScreenshot();
+                            if (!(arguments.length > 0 && arguments[0] === undefined)) {
+                                if (screen) {
+                                    await AllureReporterExtensions.attachScreenshot();
+                                }
+
+                                endStep(testStatus);
                             }
-                            endStep(testStatus);
                         }
                     } : function () {
                         try {
 
                             if (arguments.length > 0 && arguments[0] === undefined) {
-                                return; // no need to annotate; method should be skipped
+                                return originalMethod.apply(this, arguments); // no need to annotate; method should be skipped
                             }
 
                             const argumentsDescription = argsToPlainText(arguments) ? `[${argsToPlainText(arguments)}]` : ``;
@@ -173,7 +176,9 @@ export namespace AllureReporterExtensions {
                             testStatus = TestStatus.BROKEN;
                             throw error;
                         } finally {
-                            endStep(testStatus);
+                            if (!(arguments.length > 0 && arguments[0] === undefined)) {
+                                endStep(testStatus);
+                            }
                         }
                     };
                 }
