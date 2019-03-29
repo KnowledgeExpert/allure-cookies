@@ -2,7 +2,7 @@
   "name": "allure-cookies",
   "description": "Allure helpers",
   "homepage": "https://github.com/KnowledgeExpert/allure-cookies",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "built/index.js",
   "typings": "built/index.d.ts",
   "dependencies": {

@@ -200,7 +200,7 @@ var AllureReporterExtensions;
             return '';
         }
         args._map = [].map;
-        const completeArguments = args._map(a => a.toString()).join();
+        const completeArguments = args._map(a => a.toString() === '[object Object]' ? '...' : a.toString()).join();
         return completeArguments.length === 0 ? '' : completeArguments.toString();
     }
     function methodNametoPlainText(methodName, heading = false, gherkin = false) {
