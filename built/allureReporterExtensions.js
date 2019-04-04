@@ -120,7 +120,7 @@ var AllureReporterExtensions;
                     descriptor.value = function () {
                         let stepStarted = false;
                         try {
-                            const argumentsDescription = argsToPlainText(arguments);
+                            const argumentsDescription = argsToPlainText([arguments[0]]);
                             startStep(methodDescription, '-', argumentsDescription);
                             stepStarted = true;
                             return originalMethod.apply(this, arguments);

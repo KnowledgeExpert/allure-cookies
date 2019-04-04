@@ -16,55 +16,51 @@ import {AllureReporterExtensions} from './allureReporterExtensions';
 import Heading = AllureReporterExtensions.Heading;
 import Gherkin = AllureReporterExtensions.Gherkin;
 
+async function callFnOrAsyncFn(fn) {
+    if (fn) {
+        if (fn[Symbol.toStringTag] === 'AsyncFunction') {
+            await fn();
+        } else {
+            fn();
+        }
+    }
+}
+
 export class GherkinHelpers {
     //steps are needed only for verbose reporting
     @Gherkin()
-    public static GIVEN(stepDescription?: string, steps?: () => void | Promise<void>) {
-        if (steps) {
-            return steps();
-        }
+    public static async GIVEN(stepDescription = '', steps?: () => void | Promise<void>) {
+        await callFnOrAsyncFn(steps);
     }
 
     @Gherkin()
-    public static WHEN(stepDescription?: string, steps?: () => void | Promise<void>) {
-        if (steps) {
-            return steps();
-        }
+    public static async WHEN(stepDescription = '', steps?: () => void | Promise<void>) {
+        await callFnOrAsyncFn(steps);
     }
 
     @Gherkin()
-    public static THEN(stepDescription?: string, steps?: () => void | Promise<void>) {
-        if (steps) {
-            return steps();
-        }
+    public static async THEN(stepDescription = '', steps?: () => void | Promise<void>) {
+        await callFnOrAsyncFn(steps);
     }
 
     @Gherkin()
-    public static AND(stepDescription?: string, steps?: () => void | Promise<void>) {
-        if (steps) {
-            return steps();
-        }
+    public static async AND(stepDescription = '', steps?: () => void | Promise<void>) {
+        await callFnOrAsyncFn(steps);
     }
 
     @Gherkin()
-    public static EXPECT(stepDescription?: string, steps?: () => void | Promise<void>) {
-        if (steps) {
-            return steps();
-        }
+    public static async EXPECT(stepDescription = '', steps?: () => void | Promise<void>) {
+        await callFnOrAsyncFn(steps);
     }
 
     @Gherkin()
-    public static USER(stepDescription?: string, steps?: () => void | Promise<void>) {
-        if (steps) {
-            return steps();
-        }
+    public static async USER(stepDescription = '', steps?: () => void | Promise<void>) {
+        await callFnOrAsyncFn(steps);
     }
 
     @Gherkin()
-    public static WITH(stepDescription?: string, steps?: () => void | Promise<void>) {
-        if (steps) {
-            return steps();
-        }
+    public static async WITH(stepDescription = '', steps?: () => void | Promise<void>) {
+        await callFnOrAsyncFn(steps);
     }
 }
 

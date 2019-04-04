@@ -21,42 +21,38 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const allureReporterExtensions_1 = require("./allureReporterExtensions");
 var Gherkin = allureReporterExtensions_1.AllureReporterExtensions.Gherkin;
+async function callFnOrAsyncFn(fn) {
+    if (fn) {
+        if (fn[Symbol.toStringTag] === 'AsyncFunction') {
+            await fn();
+        }
+        else {
+            fn();
+        }
+    }
+}
 class GherkinHelpers {
     //steps are needed only for verbose reporting
-    static GIVEN(stepDescription, steps) {
-        if (steps) {
-            return steps();
-        }
+    static async GIVEN(stepDescription = '', steps) {
+        await callFnOrAsyncFn(steps);
     }
-    static WHEN(stepDescription, steps) {
-        if (steps) {
-            return steps();
-        }
+    static async WHEN(stepDescription = '', steps) {
+        await callFnOrAsyncFn(steps);
     }
-    static THEN(stepDescription, steps) {
-        if (steps) {
-            return steps();
-        }
+    static async THEN(stepDescription = '', steps) {
+        await callFnOrAsyncFn(steps);
     }
-    static AND(stepDescription, steps) {
-        if (steps) {
-            return steps();
-        }
+    static async AND(stepDescription = '', steps) {
+        await callFnOrAsyncFn(steps);
     }
-    static EXPECT(stepDescription, steps) {
-        if (steps) {
-            return steps();
-        }
+    static async EXPECT(stepDescription = '', steps) {
+        await callFnOrAsyncFn(steps);
     }
-    static USER(stepDescription, steps) {
-        if (steps) {
-            return steps();
-        }
+    static async USER(stepDescription = '', steps) {
+        await callFnOrAsyncFn(steps);
     }
-    static WITH(stepDescription, steps) {
-        if (steps) {
-            return steps();
-        }
+    static async WITH(stepDescription = '', steps) {
+        await callFnOrAsyncFn(steps);
     }
 }
 __decorate([
