@@ -23,19 +23,40 @@ const allureReporterExtensions_1 = require("./allureReporterExtensions");
 var Gherkin = allureReporterExtensions_1.AllureReporterExtensions.Gherkin;
 class GherkinHelpers {
     //steps are needed only for verbose reporting
-    static GIVEN(stepDescription) {
+    static GIVEN(stepDescription, steps) {
+        if (steps) {
+            return steps();
+        }
     }
-    static WHEN(stepDescription) {
+    static WHEN(stepDescription, steps) {
+        if (steps) {
+            return steps();
+        }
     }
-    static THEN(stepDescription) {
+    static THEN(stepDescription, steps) {
+        if (steps) {
+            return steps();
+        }
     }
-    static AND(stepDescription) {
+    static AND(stepDescription, steps) {
+        if (steps) {
+            return steps();
+        }
     }
-    static EXPECT(stepDescription) {
+    static EXPECT(stepDescription, steps) {
+        if (steps) {
+            return steps();
+        }
     }
-    static USER(stepDescription) {
+    static USER(stepDescription, steps) {
+        if (steps) {
+            return steps();
+        }
     }
-    static WITH(stepDescription) {
+    static WITH(stepDescription, steps) {
+        if (steps) {
+            return steps();
+        }
     }
 }
 __decorate([

@@ -19,31 +19,52 @@ import Gherkin = AllureReporterExtensions.Gherkin;
 export class GherkinHelpers {
     //steps are needed only for verbose reporting
     @Gherkin()
-    public static GIVEN(stepDescription?: string) {
+    public static GIVEN(stepDescription?: string, steps?: () => void | Promise<void>) {
+        if (steps) {
+            return steps();
+        }
     }
 
     @Gherkin()
-    public static WHEN(stepDescription?: string) {
+    public static WHEN(stepDescription?: string, steps?: () => void | Promise<void>) {
+        if (steps) {
+            return steps();
+        }
     }
 
     @Gherkin()
-    public static THEN(stepDescription?: string) {
+    public static THEN(stepDescription?: string, steps?: () => void | Promise<void>) {
+        if (steps) {
+            return steps();
+        }
     }
 
     @Gherkin()
-    public static AND(stepDescription?: string) {
+    public static AND(stepDescription?: string, steps?: () => void | Promise<void>) {
+        if (steps) {
+            return steps();
+        }
     }
 
     @Gherkin()
-    public static EXPECT(stepDescription?: string) {
+    public static EXPECT(stepDescription?: string, steps?: () => void | Promise<void>) {
+        if (steps) {
+            return steps();
+        }
     }
 
     @Gherkin()
-    public static USER(stepDescription?: string) {
+    public static USER(stepDescription?: string, steps?: () => void | Promise<void>) {
+        if (steps) {
+            return steps();
+        }
     }
 
     @Gherkin()
-    public static WITH(stepDescription?: string) {
+    public static WITH(stepDescription?: string, steps?: () => void | Promise<void>) {
+        if (steps) {
+            return steps();
+        }
     }
 }
 
