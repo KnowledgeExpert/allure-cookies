@@ -124,13 +124,13 @@ export namespace AllureReporterExtensions {
                 let testStatus = TestStatus.PASSED;
 
                 if (gherkin) {
-                    descriptor.value = function () {
+                    descriptor.value = async function () {
                         let stepStarted = false;
                         try {
                             const argumentsDescription = argsToPlainText([arguments[0]]);
                             startStep(methodDescription, '-', argumentsDescription);
                             stepStarted = true;
-                            return originalMethod.apply(this, arguments);
+                            return await originalMethod.apply(this, arguments);
                         } finally {
                             if (stepStarted) {
                                 endStep(testStatus);

@@ -54,13 +54,11 @@ export class GherkinHelpers {
     }
 
     @Gherkin()
-    public static async USER(stepDescription = '', steps?: () => void | Promise<void>) {
-        await callFnOrAsyncFn(steps);
+    public static async USER(stepDescription = '') {
     }
 
     @Gherkin()
-    public static async WITH(stepDescription = '', steps?: () => void | Promise<void>) {
-        await callFnOrAsyncFn(steps);
+    public static async WITH(stepDescription = '') {
     }
 }
 

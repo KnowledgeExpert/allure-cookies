@@ -48,11 +48,9 @@ class GherkinHelpers {
     static async EXPECT(stepDescription = '', steps) {
         await callFnOrAsyncFn(steps);
     }
-    static async USER(stepDescription = '', steps) {
-        await callFnOrAsyncFn(steps);
+    static async USER(stepDescription = '') {
     }
-    static async WITH(stepDescription = '', steps) {
-        await callFnOrAsyncFn(steps);
+    static async WITH(stepDescription = '') {
     }
 }
 __decorate([
