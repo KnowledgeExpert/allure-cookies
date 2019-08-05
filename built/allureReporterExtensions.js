@@ -155,7 +155,9 @@ var AllureReporterExtensions;
                         }
                         finally {
                             if (stepStarted) {
-                                await AllureReporterExtensions.attachScreenshot();
+                                if (screen) {
+                                    await AllureReporterExtensions.attachScreenshot();
+                                }
                                 endStep(testStatus);
                             }
                         }
