@@ -17,6 +17,13 @@ export declare namespace AllureReporterExtensions {
     function Heading(): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
     function ScreenedStep(tags?: any[], title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
     function Step(tags?: any[], title?: string): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
+    function GeneralStep(stepInfo?: {
+        screen?: boolean;
+        title?: string;
+        heading?: boolean;
+        gherkin?: boolean;
+        tags?: string[];
+    }): (target: any, methodName: any, descriptor: PropertyDescriptor) => void;
     function startStep(...descriptions: string[]): void;
     function endStep(status?: TestStatus): void;
     enum TestStatus {

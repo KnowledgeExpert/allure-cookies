@@ -27,6 +27,7 @@ exports.getJasmineAllureReporter = allureReporterExtensions_1.AllureReporterExte
 exports.setScreenshotProvider = allureReporterExtensions_1.AllureReporterExtensions.setScreenshotProvider;
 exports.reportStepsWithTags = allureReporterExtensions_1.AllureReporterExtensions.reportStepsWithTags;
 exports.Step = allureReporterExtensions_1.AllureReporterExtensions.Step;
+exports.GeneralStep = allureReporterExtensions_1.AllureReporterExtensions.GeneralStep;
 exports.ScreenedStep = allureReporterExtensions_1.AllureReporterExtensions.ScreenedStep;
 exports.Heading = allureReporterExtensions_1.AllureReporterExtensions.Heading;
 exports.Gherkin = allureReporterExtensions_1.AllureReporterExtensions.Gherkin;

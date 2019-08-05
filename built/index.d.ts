@@ -11,6 +11,7 @@ export declare const getJasmineAllureReporter: typeof AllureReporterExtensions.g
 export declare const setScreenshotProvider: typeof AllureReporterExtensions.setScreenshotProvider;
 export declare const reportStepsWithTags: typeof AllureReporterExtensions.reportStepsWithTags;
 export declare const Step: typeof AllureReporterExtensions.Step;
+export declare const GeneralStep: typeof AllureReporterExtensions.GeneralStep;
 export declare const ScreenedStep: typeof AllureReporterExtensions.ScreenedStep;
 export declare const Heading: typeof AllureReporterExtensions.Heading;
 export declare const Gherkin: typeof AllureReporterExtensions.Gherkin;

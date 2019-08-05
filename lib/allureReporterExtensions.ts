@@ -104,6 +104,10 @@ export namespace AllureReporterExtensions {
         return createStepAnnotation({title: title, tags: tags});
     }
 
+    export function GeneralStep(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, gherkin?: boolean, tags?: string[] }) {
+        return createStepAnnotation(stepInfo);
+    }
+
     function createStepAnnotation(stepInfo?: { screen?: boolean, title?: string, heading?: boolean, gherkin?: boolean, tags?: string[] }) {
         return (target, methodName, descriptor: PropertyDescriptor) => {
             const originalMethod = descriptor.value;

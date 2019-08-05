@@ -30,6 +30,7 @@ export const setScreenshotProvider = AllureReporterExtensions.setScreenshotProvi
 export const reportStepsWithTags = AllureReporterExtensions.reportStepsWithTags;
 
 export const Step = AllureReporterExtensions.Step;
+export const GeneralStep = AllureReporterExtensions.GeneralStep;
 export const ScreenedStep = AllureReporterExtensions.ScreenedStep;
 export const Heading = AllureReporterExtensions.Heading;
 export const Gherkin = AllureReporterExtensions.Gherkin;

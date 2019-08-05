@@ -102,6 +102,10 @@ var AllureReporterExtensions;
         return createStepAnnotation({ title: title, tags: tags });
     }
     AllureReporterExtensions.Step = Step;
+    function GeneralStep(stepInfo) {
+        return createStepAnnotation(stepInfo);
+    }
+    AllureReporterExtensions.GeneralStep = GeneralStep;
     function createStepAnnotation(stepInfo) {
         return (target, methodName, descriptor) => {
             const originalMethod = descriptor.value;
